@@ -1,0 +1,82 @@
+@model FlightApp.Models.Flight
+
+<div class="card shadow-sm mt-4" style="max-width: 600px; margin: 0 auto;">
+    <div class="card-header bg-danger text-white text-center">
+        <h2>Uçuş Sil</h2>
+    </div>
+    <div class="card-body">
+        <p class="text-center text-danger fw-bold">Bu uçuşu silmek istediğinizden emin misiniz?</p>
+        <ul class="list-group list-group-flush mb-3">
+            <li class="list-group-item">
+                <strong>Kalkış Şehri:</strong> @Model.DepartureCity
+            </li>
+            <li class="list-group-item">
+                <strong>Varış Şehri:</strong> @Model.ArrivalCity
+            </li>
+            <li class="list-group-item">
+                <strong>Havayolu:</strong> @Model.Airline?.AirlineName
+            </li>
+            <li class="list-group-item">
+                <strong>Uçuş Tarihi:</strong> @Model.FlightDate.ToString("yyyy-MM-dd")
+            </li>
+            <li class="list-group-item">
+                <strong>Fiyat:</strong> @Model.Price.ToString("C")
+            </li>
+        </ul>
+        <form asp-action="Delete" method="post" class="text-center">
+            <input type="hidden" asp-for="FlightId" />
+            <button type="submit" class="btn btn-danger me-2">Sil</button>
+            <a asp-action="Index" class="btn btn-secondary">İptal</a>
+        </form>
+    </div>
+</div>
+
+<style>
+    .card {
+        border-radius: 10px;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        background-color: #fff;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .card-header {
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .list-group-item {
+        font-size: 1rem;
+        padding: 10px 15px;
+        border: none;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .list-group-item:last-child {
+        border-bottom: none;
+    }
+
+    .btn {
+        font-size: 1rem;
+        padding: 10px 20px;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        border-color: #dc3545;
+    }
+
+    .btn-danger:hover {
+        background-color: #c82333;
+        border-color: #bd2130;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+        border-color: #545b62;
+    }
+</style>

@@ -1,0 +1,30 @@
+<!-- Views/AdminUsers/Index.cshtml -->
+@{
+    ViewData["Title"] = "Kullanıcı Yönetimi";
+}
+
+<div class="container mt-4">
+    <h2>Kayıtlı Kullanıcılar</h2>
+    
+    <div class="table-responsive mt-4">
+        <table class="table table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Ad</th>
+                    <th>Soyad</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody id="userTableBody">
+                <tr>
+                    <td colspan="4" class="text-center">Yükleniyor...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="/js/users.js"></script>
+}

@@ -1,0 +1,41 @@
+<div id="map" style="height: 500px; width: 100%;"></div>
+
+<script>
+    var map = L.map('map').setView([39.92077, 32.85411], 6); // Başlangıç olarak Türkiye'nin ortasına odaklanıyoruz
+
+    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiaGFydW5lbWlub2dsdSIsImEiOiJjbTR6bHdiZzgxMDk0Mm1xdms4YXkxM2xqIn0.OHXE6SJJdqeASHU4BARrFg', {
+        maxZoom: 18,
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        id: 'mapbox/streets-v11',
+        tileSize: 512,
+        zoomOffset: -1
+    }).addTo(map);
+
+    // Şehirler için koordinatlar
+    var originCity = '@ViewBag.OriginCity';
+    var destinationCity = '@ViewBag.DestinationCity';
+
+    // Örnek: Eğer koordinatları bir veri kaynağından çekecekseniz burada bir API kullanabilirsiniz
+    var coordinates = {
+        "Ankara": [39.92077, 32.85411],
+        "Istanbul": [41.0082, 28.9784],
+        "Izmir": [38.4192, 27.1287]
+    };
+
+    if (coordinates[originCity] && coordinates[destinationCity]) {
+        var origin = coordinates[originCity];
+        var destination = coordinates[destinationCity];
+
+        // Şehirleri haritada işaretle
+        L.marker(origin).addTo(map).bindPopup("Kalkış: " + originCity).openPopup();
+        L.marker(destination).addTo(map).bindPopup("Varış: " + destinationCity).openPopup();
+
+        // İki şehir arasında bir çizgi çiz
+        var routeLine = L.polyline([origin, destination], { color: 'blue' }).addTo(map);
+
+        // Haritayı rotayı kapsayacak şekilde ayarla
+        map.fitBounds(routeLine.getBounds());
+    } else {
+        alert("Şehir bilgileri eksik veya desteklenmiyor.");
+    }
+</script>

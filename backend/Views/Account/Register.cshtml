@@ -1,0 +1,43 @@
+@{
+    ViewData["Title"] = "Register";
+}
+
+<h2>Üye Ol</h2>
+
+@if (!string.IsNullOrEmpty(ViewBag.Error))
+{
+    <div class="alert alert-danger">
+        @ViewBag.Error
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(ViewBag.Message))
+{
+    <div class="alert alert-success">
+        @ViewBag.Message
+    </div>
+}
+
+<form asp-action="Register" method="post">
+    <div class="form-group">
+        <label for="firstname">Ad</label>
+        <input type="text" class="form-control" id="firstname" name="firstname" />
+    </div>
+    <div class="form-group">
+        <label for="lastname">Soyad</label>
+        <input type="text" class="form-control" id="lastname" name="lastname" />
+    </div>
+    <div class="form-group">
+        <label for="email">E-posta</label>
+        <input type="email" class="form-control" id="email" name="email" />
+    </div>
+    <div class="form-group">
+        <label for="password">Şifre</label>
+        <input type="password" class="form-control" id="password" name="password" />
+    </div>
+    <div class="form-group">
+        <label for="confirmPassword">Şifre (Tekrar)</label>
+        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" />
+    </div>
+    <button type="submit" class="btn btn-primary">Üye Ol</button>
+</form>

@@ -1,0 +1,42 @@
+@model FlightApp.Models.Flight
+
+<h2>Yeni Uçuş Ekle</h2>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label for="DepartureCity">Kalkış Şehri</label>
+        <input type="text" class="form-control" id="DepartureCity" name="DepartureCity" required />
+    </div>
+    <div class="form-group">
+        <label for="ArrivalCity">Varış Şehri</label>
+        <input type="text" class="form-control" id="ArrivalCity" name="ArrivalCity" required />
+    </div>
+    <div class="form-group">
+        <label for="DepartureTime">Kalkış Saati</label>
+        <input type="time" class="form-control" id="DepartureTime" name="DepartureTime" required />
+    </div>
+    <div class="form-group">
+        <label for="ArrivalTime">Varış Saati</label>
+        <input type="time" class="form-control" id="ArrivalTime" name="ArrivalTime" required />
+    </div>
+    <div class="form-group">
+        <label for="FlightDate">Uçuş Tarihi</label>
+        <input type="date" class="form-control" id="FlightDate" name="FlightDate" required />
+    </div>
+    <div class="form-group">
+        <label for="Price">Fiyat</label>
+        <input type="number" class="form-control" id="Price" name="Price" required />
+    </div>
+    <div class="form-group">
+    <label for="AirlineId">Havayolu</label>
+    <select class="form-control" id="AirlineId" name="AirlineId" required>
+        <option value="">-- Havayolu Seçin --</option>
+        @foreach (var airline in (IEnumerable<SelectListItem>)ViewBag.Airlines)
+        {
+            <option value="@airline.Value">@airline.Text</option>
+        }
+    </select>
+</div>
+
+    <button type="submit" class="btn btn-primary">Kaydet</button>
+</form>

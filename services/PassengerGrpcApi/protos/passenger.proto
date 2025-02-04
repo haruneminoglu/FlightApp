@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+option csharp_namespace = "PassengerGrpcService";
+
+package passenger;
+
+service PassengerService {
+  rpc GetPassengers (GetPassengersRequest) returns (GetPassengersResponse);
+}
+
+message GetPassengersRequest {
+}
+
+message PassengerInfo {
+  int32 passengerId = 1;
+  string gender = 2;
+  string maskedTcNo = 3;
+  string passengerName = 4;
+  string passengerSurname = 5;
+  string dateOfBirth = 6;
+}
+
+message GetPassengersResponse {
+  repeated PassengerInfo passengers = 1;
+}

@@ -1,0 +1,115 @@
+<div id="flight-search">
+    <h2 class="text-center mb-4">Uçuş Arama</h2>
+    <form method="get" asp-controller="Flight" asp-action="SearchResults">
+        <div class="form-group">
+            <label for="departureCity">
+                <i class="fas fa-plane-departure"></i> Kalkış Şehri
+            </label>
+            <input 
+                type="text" 
+                id="departureCity" 
+                name="departureCity" 
+                class="form-control" 
+                placeholder="Kalkış şehri girin" 
+                required>
+        </div>
+
+        <div class="form-group">
+            <label for="arrivalCity">
+                <i class="fas fa-plane-arrival"></i> Varış Şehri
+            </label>
+            <input 
+                type="text" 
+                id="arrivalCity" 
+                name="arrivalCity" 
+                class="form-control" 
+                placeholder="Varış şehri girin" 
+                required>
+        </div>
+
+        <div class="form-group">
+            <label for="departureDate">
+                <i class="fas fa-calendar-alt"></i> Gidiş Tarihi
+            </label>
+            <input 
+                type="date" 
+                id="departureDate" 
+                name="flightDate" 
+                class="form-control" 
+                required>
+        </div>
+
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary btn-block mt-4">
+                <i class="fas fa-search"></i> Ara
+            </button>
+        </div>
+    </form>
+</div>
+
+<style>
+    #flight-search {
+        max-width: 500px;
+        margin: 20px auto;
+        padding: 30px;
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        background: #f9f9f9;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        font-family: 'Arial', sans-serif;
+    }
+
+    #flight-search h2 {
+        font-size: 1.8rem;
+        color: #006400; /* Koyu yeşil */
+        font-weight: bold;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    #flight-search label {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #555;
+    }
+
+    #flight-search input {
+        width: 100%;
+        padding: 10px 12px;
+        font-size: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+    }
+
+    #flight-search input:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+        outline: none;
+    }
+
+    #flight-search button {
+        padding: 12px;
+        font-size: 1rem;
+        color: #fff;
+        background-color: #006400; /* Koyu yeşil */
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        width: 200px;
+        margin: 0 auto; /* Ortalama */
+        display: block; /* Ortalama için */
+    }
+
+    #flight-search button:hover {
+        background-color: #004d00;
+    }
+</style>
+
+<!-- Font Awesome for Icons -->
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>

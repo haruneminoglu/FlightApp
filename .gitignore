@@ -1,0 +1,18 @@
+# Visual Studio ve .NET ile ilgili gereksiz dosyalar
+bin/
+obj/
+.vscode/
+Properties/launchSettings.json
+
+# Node.js ile ilgili gereksiz dosyalar
+**/node_modules/
+**/package-lock.json
+
+# Genel gereksiz dosyalar
+.DS_Store
+Thumbs.db
+
+# Hassas bilgileri içeren ayar dosyaları
+appsettings.json
+appsettings.Development.json
+

@@ -1,0 +1,166 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight Reservations</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <!-- Header kısmı -->
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <!-- Logo ve FlightReservations -->
+                <a class="navbar-brand d-flex align-items-center" href="/Home/Index">
+                    <img src="/images/logo.png" alt="Logo" width="30" height="30" class="me-2" />
+                    <span>FlightReservations</span>
+                </a>
+
+                <!-- Menü öğeleri -->
+                <div class="collapse navbar-collapse ms-3">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Home/Index">Ana Sayfa</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Home/FAQ">SSS</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Home/About">Hakkımızda</a>
+                        </li>
+                        @inject IHttpContextAccessor HttpContextAccessor
+                        @if (HttpContextAccessor.HttpContext?.Session?.GetString("UserRole") == "User")
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" href="/Flight/Routes">Uçuş Rotaları</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/Account/Profile">Hesabım</a>
+                            </li>
+                        }
+                    </ul>
+
+                    <!-- Giriş Yap ve Profil İkonu -->
+<div class="d-flex align-items-center">
+    @if (!string.IsNullOrEmpty(HttpContextAccessor.HttpContext?.Session?.GetString("UserRole")))
+    {
+        <span class="me-3">Hoşgeldiniz, @HttpContextAccessor.HttpContext.Session.GetString("UserName")</span>
+
+        <!-- Çıkış Yap butonunu form içinde yapalım -->
+        <form method="post" action="/Account/Logout" style="display: inline;">
+            <button type="submit" class="btn btn-link text-dark">Çıkış Yap</button>
+        </form>
+    }
+    else
+    {
+        <!-- Kullanıcı ikonu ve Giriş Yap bağlantısı -->
+        <img src="/images/user-icon.png" alt="User Icon" class="me-2" style="width: 24px; height: 24px;">
+        <a href="#" data-bs-toggle="modal" data-bs-target="#loginModal" class="text-decoration-none text-dark me-2">
+            Giriş Yap
+        </a>
+    }
+</div>
+
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- İçerik kısmı -->
+    <main>
+        @RenderBody()
+    </main>
+
+    <!-- Login/Register Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Hesap İşlemleri</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Sekme Başlıkları -->
+                    <ul class="nav nav-tabs" id="authTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#login" type="button" role="tab" aria-controls="login" aria-selected="true">
+                                Giriş Yap
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="register-tab" data-bs-toggle="tab" data-bs-target="#register" type="button" role="tab" aria-controls="register" aria-selected="false">
+                                Üye Ol
+                            </button>
+                        </li>
+                    </ul>
+                    <!-- Sekme İçerikleri -->
+                    <div class="tab-content" id="authTabContent">
+                        <!-- Giriş Yap Sekmesi -->
+                        <div class="tab-pane fade show active" id="login" role="tabpanel" aria-labelledby="login-tab">
+                            <form method="post" action="/Account/Login">
+                                <div class="mb-3">
+                                    <label for="loginEmail" class="form-label">E-posta</label>
+                                    <input type="email" class="form-control" id="loginEmail" name="email" required />
+                                </div>
+                                <div class="mb-3">
+                                    <label for="loginPassword" class="form-label">Şifre</label>
+                                    <input type="password" class="form-control" id="loginPassword" name="password" required />
+                                </div>
+                                <button type="submit" class="btn btn-primary">Giriş Yap</button>
+                            </form>
+                        </div>
+                        <!-- Üye Ol Sekmesi -->
+                        <div class="tab-pane fade" id="register" role="tabpanel" aria-labelledby="register-tab">
+                            <form method="post" action="/Account/Register">
+                                <div class="mb-3">
+                                    <label for="firstname" class="form-label">Ad</label>
+                                    <input type="text" class="form-control" id="firstname" name="firstname" required />
+                                </div>
+                                <div class="mb-3">
+                                    <label for="lastname" class="form-label">Soyad</label>
+                                    <input type="text" class="form-control" id="lastname" name="lastname" required />
+                                </div>
+                                <div class="mb-3">
+                                    <label for="registerEmail" class="form-label">E-posta</label>
+                                    <input type="email" class="form-control" id="registerEmail" name="email" required />
+                                </div>
+                                <div class="mb-3">
+                                    <label for="registerPassword" class="form-label">Şifre</label>
+                                    <input type="password" class="form-control" id="registerPassword" name="password" required />
+                                </div>
+                                <div class="mb-3">
+                                    <label for="registerConfirmPassword" class="form-label">Şifre Tekrar</label>
+                                    <input type="password" class="form-control" id="registerConfirmPassword" name="confirmPassword" required />
+                                </div>
+                                <button type="submit" class="btn btn-primary">Üye Ol</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+  <!-- jQuery CDN -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Profil.js Script -->
+<script src="/js/profile.js"></script>
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+@RenderSection("Scripts", required: false)
+
+
+</body>
+</html>

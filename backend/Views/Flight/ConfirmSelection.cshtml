@@ -1,0 +1,270 @@
+@model FlightDetail
+
+@{
+    ViewBag.Title = "Uçuş Detayları";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <!-- Uçuş Detayları ve Fiyat Kartı -->
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h2 class="mb-0">Uçuş Detayları</h2>
+                </div>
+                <div class="card-body">
+                    <table class="table table-borderless">
+                        <tr>
+                            <th class="text-muted">Havayolu:</th>
+                            <td>@Model.AirlineName</td>
+                        </tr>
+                        <tr>
+                            <th class="text-muted">Kalkış Şehri:</th>
+                            <td>@Model.DepartureCity</td>
+                        </tr>
+                        <tr>
+                            <th class="text-muted">Varış Şehri:</th>
+                            <td>@Model.ArrivalCity</td>
+                        </tr>
+                        <tr>
+                            <th class="text-muted">Uçuş Tarihi:</th>
+                            <td>@Model.FlightDate.ToString("dd.MM.yyyy")</td>
+                        </tr>
+                        <tr>
+                            <th class="text-muted">Kalkış Saati:</th>
+                            <td>@Model.DepartureTime.ToString("HH:mm")</td>
+                        </tr>
+                        <tr>
+                            <th class="text-muted">Varış Saati:</th>
+                            <td>@Model.ArrivalTime.ToString("HH:mm")</td>
+                        </tr>
+                        <tr>
+                            <th class="text-muted">Uçuş Süresi:</th>
+                            <td>@Model.Duration</td>
+                        </tr>
+                    </table>
+
+                    <!-- Fiyat ve Sınıf Seçimi Bölümü -->
+                    <div class="price-section p-3 bg-light rounded">
+                        <div class="mb-3">
+                            <label for="classSelect" class="form-label">Uçuş Sınıfı</label>
+                            <select id="classSelect" class="form-select" required onchange="console.log('Select değişti')">
+                                <option value="1" data-multiplier="1">Economy</option>
+                                <option value="2" data-multiplier="1.5">Business</option>
+                                <option value="3" data-multiplier="2">First</option>
+                            </select>
+                        </div>
+                        <div class="current-price">
+                            <h3 class="text-primary mb-0">Toplam Tutar:</h3>
+                            <h2 class="price-display mb-0">@Model.Price.ToString("C2")</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Yolcu Bilgileri Formu -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="mb-0">Yolcu Bilgileri</h2>
+                </div>
+                <div class="card-body">
+                    <form id="passengerForm" method="post" asp-action="CompleteReservation" asp-controller="Flight">
+                        <input type="hidden" name="FlightId" value="@Model.FlightId" />
+                        <input type="hidden" name="ClassId" id="selectedClassId" value="1" />
+                        
+                        <div class="mb-3">
+                            <label for="gender" class="form-label required">Cinsiyet</label>
+                            <select id="gender" name="Gender" class="form-select" required>
+                                <option value="">Seçiniz</option>
+                                <option value="Male">Erkek</option>
+                                <option value="Female">Kadın</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="tcNo" class="form-label required">T.C. Kimlik No</label>
+                            <input type="text" id="tcNo" name="TcNo" class="form-control" 
+                                   maxlength="11" minlength="11" required 
+                                   pattern="[0-9]+" 
+                                   title="Lütfen 11 haneli TC kimlik numaranızı giriniz"/>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="passengerName" class="form-label required">Ad</label>
+                            <input type="text" id="passengerName" name="PassengerName" class="form-control" required />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="passengerSurname" class="form-label required">Soyad</label>
+                            <input type="text" id="passengerSurname" name="PassengerSurname" class="form-control" required />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="dateOfBirth" class="form-label required">Doğum Tarihi</label>
+                            <input type="date" id="dateOfBirth" name="DateOfBirth" class="form-control" required />
+                        </div>
+
+                        <button type="submit" class="btn btn-success btn-lg w-100">Satın Al</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        border-radius: 8px;
+    }
+    
+    .card-header {
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #dee2e6;
+    }
+    
+    .table th {
+        width: 150px;
+    }
+    
+    .text-muted {
+        color: #6c757d !important;
+    }
+
+    .form-label.required:after {
+        content: "*";
+        color: red;
+        margin-left: 4px;
+    }
+
+    .price-section {
+        border: 2px solid #e9ecef;
+        margin-top: 1rem;
+    }
+
+    .current-price {
+        text-align: center;
+        margin-top: 1rem;
+    }
+
+    .price-display {
+        color: #28a745;
+        font-size: 2rem;
+        font-weight: bold;
+    }
+
+    .price-display {
+        transition: opacity 0.3s ease-in-out;
+    }
+
+    .spinner-border {
+        width: 1.5rem;
+        height: 1.5rem;
+        vertical-align: middle;
+    }
+</style>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            console.log("jQuery hazır!");
+            
+            const flightId = @Model.FlightId;
+            const priceDisplay = $('.price-display');
+
+            $('#classSelect').on('change', async function() {
+                console.log('Sınıf değişti');
+
+                const classId = $(this).val();
+                // Hidden input'u güncelle
+                $('#selectedClassId').val(classId);
+                
+                console.log('Class ID:', classId);
+                console.log('Flight ID:', flightId);
+                
+                try {
+                    priceDisplay.html('<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Yükleniyor...</span></div>');
+
+                    const response = await $.ajax({
+                        url: '/Flight/CalculatePrice',
+                        method: 'GET',
+                        data: { flightId: flightId, classId: classId },
+                        dataType: 'json'
+                    });
+
+                    console.log('Response:', response);
+
+                    priceDisplay.fadeTo(300, 0, function() {
+                        $(this).text(new Intl.NumberFormat('tr-TR', { 
+                            style: 'currency', 
+                            currency: 'TRY' 
+                        }).format(response.price)).fadeTo(300, 1);
+                    });
+                } catch (error) {
+                    console.error('Fiyat hesaplama hatası:', error);
+                    priceDisplay.text('Fiyat hesaplanamadı');
+                    
+                    Swal.fire({
+                        title: 'Hata!',
+                        text: 'Fiyat hesaplanırken bir hata oluştu.',
+                        icon: 'error',
+                        confirmButtonText: 'Tamam'
+                    });
+                }
+            });
+
+            $('#tcNo').on('input', function() {
+                $(this).val($(this).val().replace(/[^0-9]/g, ''));
+            });
+
+         $('#passengerForm').on('submit', function(e) {
+    e.preventDefault();
+    
+    if (this.checkValidity()) {
+        const formData = new FormData(this);
+        
+        // FormData içeriğini kontrol etmek için
+        for (let pair of formData.entries()) {
+            console.log(pair[0] + ': ' + pair[1]);
+        }
+        
+        fetch(this.action, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            console.log('Response status:', response.status);
+            return response.json();
+        })
+        .then(data => {
+            console.log('Response data:', data);
+            if (data.success) {
+                Swal.fire({
+                    title: 'Başarılı!',
+                    text: 'Rezervasyonunuz başarıyla oluşturuldu.',
+                    icon: 'success',
+                    confirmButtonText: 'Tamam'
+                }).then((result) => {
+                    window.location.href = '/';
+                });
+            } else {
+                throw new Error(data.message || 'Rezervasyon oluşturulamadı');
+            }
+        })
+        .catch(error => {
+            console.error('Error details:', error);
+            Swal.fire({
+                title: 'Hata!',
+                text: error.message || 'Rezervasyon oluşturulurken bir hata oluştu.',
+                icon: 'error',
+                confirmButtonText: 'Tamam'
+            });
+        });
+    }
+});
+        });
+    </script>
+}

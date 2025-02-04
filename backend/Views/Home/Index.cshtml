@@ -1,0 +1,380 @@
+﻿@{
+    ViewData["Title"] = "Ana Sayfa";
+}
+
+<div class="main-container">
+    @if (Context.Session.GetString("UserRole") == "Admin")
+    {
+        <!-- Admin Dashboard -->
+        <div class="admin-welcome">
+            <div class="welcome-header">
+                <svg class="wave" viewBox="0 0 1440 320">
+                    <path fill="#007bff" fill-opacity="0.15" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,165.3C1248,171,1344,149,1392,138.7L1440,128L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path>
+                </svg>
+                <h1>Admin Kontrol Paneli</h1>
+                <p>Sistem yönetimi ve kontroller için tüm araçlar</p>
+            </div>
+        </div>
+
+        <div class="admin-grid">
+            <div class="admin-card flights">
+                <div class="card-content">
+                    <div class="icon-bg">
+                        <i class="fas fa-plane"></i>
+                    </div>
+                    <h3>Uçuş Yönetimi</h3>
+                    <p>Uçuşları ekle, düzenle ve yönet</p>
+                    <a href="/AdminFlights/Index" class="admin-btn">
+                        Yönet
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="admin-card users">
+                <div class="card-content">
+                    <div class="icon-bg">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Kullanıcı Yönetimi</h3>
+                    <p>Kullanıcı hesaplarını yönet</p>
+                    <a href="/AdminUsers/Index" class="admin-btn">
+                        Yönet
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="admin-card passengers">
+                <div class="card-content">
+                    <div class="icon-bg">
+                        <i class="fas fa-user-friends"></i>
+                    </div>
+                    <h3>Yolcu Yönetimi</h3>
+                    <p>Yolcu bilgilerini görüntüle</p>
+                    <a href="/AdminPassengers/Index" class="admin-btn">
+                        Yönet
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <!-- User Search Section -->
+        <div class="search-section">
+            <div class="search-content">
+                <div class="welcome-text">
+                    <h1>Yeni Maceralara Hazır Mısınız?</h1>
+                    <p>Hayalinizdeki destinasyona uygun fiyatlı uçuşları bulun.</p>
+                </div>
+                
+                <div class="features">
+                    <div class="feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>7/24 Müşteri Desteği</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Ücretsiz İptal</span>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-check-circle"></i>
+                        <span>En İyi Fiyat Garantisi</span>
+                    </div>
+                </div>
+
+                <div class="search-box">
+                    @await Component.InvokeAsync("FlightSearch")
+                </div>
+            </div>
+
+            <!-- Yeni eklenen uçak görselleri -->
+            <div class="airplane-left">
+                <img src="/images/airplane-left.png" alt="Airplane Left">
+            </div>
+            <div class="airplane-right">
+                <img src="/images/airplane-right.png" alt="Airplane Right">
+            </div>
+
+            <div class="decoration">
+                <div class="circle circle-1"></div>
+                <div class="circle circle-2"></div>
+                <div class="circle circle-3"></div>
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+    .main-container {
+        min-height: 100vh;
+        background-color: #f8f9fa;
+        padding: 2rem;
+    }
+
+    /* Admin Styles */
+    .admin-welcome {
+        position: relative;
+        background: white;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border-radius: 15px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .welcome-header {
+        text-align: center;
+        position: relative;
+        z-index: 2;
+    }
+
+    .wave {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1;
+    }
+
+    .admin-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        padding: 1rem;
+    }
+
+    .admin-card {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
+
+    .admin-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+    }
+
+    .card-content {
+        padding: 2rem;
+    }
+
+    .icon-bg {
+        width: 60px;
+        height: 60px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1rem;
+        background: #007bff15;
+    }
+
+    .icon-bg i {
+        font-size: 1.5rem;
+        color: #007bff;
+    }
+
+    .stats {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 1.5rem 0;
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 8px;
+    }
+
+    .number {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #007bff;
+    }
+
+    .admin-btn {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.8rem 1.5rem;
+        background: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        transition: background 0.3s ease;
+    }
+
+    .admin-btn:hover {
+        background: #0056b3;
+        color: white;
+    }
+
+    /* User Search Styles */
+    .search-section {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 20px;
+        padding: 3rem;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
+
+    .welcome-text {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .welcome-text h1 {
+        font-size: 2.5rem;
+        color: #2c3e50;
+        margin-bottom: 1rem;
+    }
+
+    .welcome-text p {
+        color: #666;
+        font-size: 1.1rem;
+    }
+
+    .features {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .feature {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .feature i {
+        color: #28a745;
+    }
+
+    .search-box {
+    position: relative;
+    z-index: 2;  /* Decoration elementlerinin üzerine çıkması için */
+    background: white;
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+    /* Uçak görselleri için yeni stiller */
+   .airplane-left, .airplane-right {
+    position: absolute;
+    top: 50%;
+    z-index: 2;
+    opacity: 0.8;
+    transition: transform 0.3s ease;
+}
+
+.airplane-left img, .airplane-right img {
+    width: 300px;
+    height: auto;
+}
+
+.airplane-left {
+    left: -20px;
+    transform: translateY(-50%);
+}
+
+.airplane-right {
+    right: -20px;
+    transform: translateY(-50%) scaleX(-1);
+}
+
+.airplane-left:hover {
+    transform: translateY(-50%) scale(1.1);
+}
+
+.airplane-right:hover {
+    transform: translateY(-50%) scale(1.1) scaleX(-1);
+}
+
+    /* Decorative Elements */
+    .decoration {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: 1;
+        overflow: hidden;
+    }
+
+    .circle {
+        position: absolute;
+        border-radius: 50%;
+    }
+
+    .circle-1 {
+        width: 300px;
+        height: 300px;
+        background: linear-gradient(45deg, #007bff10, #007bff20);
+        top: -150px;
+        right: -150px;
+    }
+
+    .circle-2 {
+        width: 200px;
+        height: 200px;
+        background: linear-gradient(45deg, #28a74510, #28a74520);
+        bottom: -100px;
+        left: -100px;
+    }
+
+    .circle-3 {
+        width: 150px;
+        height: 150px;
+        background: linear-gradient(45deg, #ffc10710, #ffc10720);
+        bottom: 50px;
+        right: 50px;
+    }
+
+    @@media (max-width: 1400px) {
+        .airplane-left, .airplane-right {
+            width: 150px;
+        }
+    }
+
+    @@media (max-width: 992px) {
+        .airplane-left, .airplane-right {
+            display: none;
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .main-container {
+            padding: 1rem;
+        }
+
+        .features {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .admin-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .search-section {
+            padding: 2rem 1rem;
+        }
+
+        .welcome-text h1 {
+            font-size: 2rem;
+        }
+    }
+</style>
+
+@section Scripts {
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script src="/js/flightSearch.js"></script>
+    <script src="/js/users.js"></script>
+}

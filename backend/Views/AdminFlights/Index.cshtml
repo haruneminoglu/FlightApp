@@ -1,0 +1,38 @@
+@model IEnumerable<FlightApp.Models.VwFlight>
+
+<h2>Uçuş Listesi</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Kalkış Şehri</th>
+            <th>Varış Şehri</th>
+            <th>Kalkış Saati</th>
+            <th>Varış Saati</th>
+            <th>Uçuş Tarihi</th>
+            <th>Fiyat</th>
+            <th>Havayolu</th>
+            <th>İşlemler</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var flight in Model)
+        {
+            <tr>
+                <td>@flight.DepartureCity</td>
+                <td>@flight.ArrivalCity</td>
+                <td>@flight.DepartureTime.ToString("HH:mm")</td>
+                <td>@flight.ArrivalTime.ToString("HH:mm")</td>
+                <td>@flight.FlightDate.ToString("dd/MM/yyyy")</td>
+                <td>@flight.Price</td>
+                <td>@flight.AirlineName</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@flight.FlightId" class="btn btn-warning">Düzenle</a>
+                    <a asp-action="Delete" asp-route-id="@flight.FlightId" class="btn btn-danger">Sil</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Create" class="btn btn-success">Yeni Uçuş Ekle</a>

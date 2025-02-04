@@ -1,0 +1,116 @@
+@model IEnumerable<FlightDetail>
+
+<div class="container mt-4">
+    <h2>Uçuş Arama Sonuçları</h2>
+    
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            Arama kriterlerinize uygun uçuş bulunamadı.
+        </div>
+    }
+    else
+    {
+        <form id="confirmForm" method="get" asp-controller="Flight" asp-action="ConfirmSelection">
+            <input type="hidden" id="selectedFlightId" name="flightId" value="">
+            <table class="table table-striped" id="flightsTable">
+                <thead>
+                    <tr>
+                        <th>Havayolu</th>
+                        <th>Kalkış</th>
+                        <th>Süre</th>
+                        <th>Varış</th>
+                        <th>Fiyat</th>
+                        <th>İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var flight in Model)
+                    {
+                        <tr class="flight-row" id="flight-@flight.FlightId" data-flight-id="@flight.FlightId">
+                            <td>@flight.AirlineName</td>
+                            <td>@flight.DepartureTime.ToString("HH:mm")</td>
+                            <td>@flight.Duration</td>
+                            <td>@flight.ArrivalTime.ToString("HH:mm")</td>
+                            <td>@flight.Price.ToString("C2")</td>
+                            <td>
+                                <button type="button" onclick="handleFlightSelection(@flight.FlightId)" class="btn btn-primary">
+                                    İleri
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </form>
+    }
+</div>
+
+<style>
+    .table {
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .table thead th {
+        background-color: #f8f9fa;
+        border-bottom: 2px solid #dee2e6;
+    }
+
+    .table tbody tr:hover {
+        background-color: #f5f5f5;
+    }
+
+    .table td {
+        vertical-align: middle;
+    }
+
+    .flight-row.selected {
+        background-color: #e0f7fa;
+    }
+
+    .selection-icon {
+        display: none;
+    }
+
+    .flight-row.selected .selection-icon {
+        display: inline;
+        color: green;
+        font-weight: bold;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    #nextStepContainer {
+        text-align: center;
+    }
+</style>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.all.min.js"></script>
+    <script>
+    function handleFlightSelection(flightId) {
+    $.ajax({
+        url: '@Url.Action("CheckAuthStatus", "Flight")',
+        type: 'POST',
+        success: function (response) {
+            console.log('Auth response:', response);
+            
+            if (response.isAuthenticated) {
+                // Form submit yerine window.location.href kullanın
+                window.location.href = '@Url.Action("ConfirmSelection", "Flight")?flightId=' + flightId;
+            } else {
+                alert('Bu işlemi gerçekleştirmek için giriş yapmanız gerekmektedir.');
+                // İsteğe bağlı olarak burada login sayfasına yönlendirebilirsiniz
+                // window.location.href = '@Url.Action("Login", "Account")';
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('Ajax error:', error);
+            alert('İşlem sırasında bir hata oluştu');
+        }
+    });
+}
+    </script>
+}
+}

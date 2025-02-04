@@ -1,0 +1,107 @@
+<div class="container">
+    <h2>Uçuş Rotaları</h2>
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <label for="startCity" class="form-label">Başlangıç Şehri</label>
+            <input type="text" id="startCity" class="form-control" placeholder="Şehir ismi girin...">
+        </div>
+        <div class="col-md-4">
+            <label for="endCity" class="form-label">Varış Şehri</label>
+            <input type="text" id="endCity" class="form-control" placeholder="Şehir ismi girin...">
+        </div>
+        <div class="col-md-4 align-self-end">
+            <button id="showRoute" class="btn btn-primary w-100">Rota Göster</button>
+        </div>
+    </div>
+    <div id="map" style="height: 500px;"></div>
+</div>
+
+<script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
+<script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoiaGFydW5lbWlub2dsdSIsImEiOiJjbTR6bHdiZzgxMDk0Mm1xdms4YXkxM2xqIn0.OHXE6SJJdqeASHU4BARrFg';
+
+    const map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/streets-v11',
+        center: [29.055, 41.015], // İstanbul koordinatları
+        zoom: 5
+    });
+
+    document.getElementById('showRoute').addEventListener('click', function () {
+        const startCity = document.getElementById('startCity').value;
+        const endCity = document.getElementById('endCity').value;
+
+        if (!startCity || !endCity) {
+            alert('Lütfen her iki şehri de girin!');
+            return;
+        }
+
+        // Şehirlerden koordinat bilgisi almak için bir API'yi kullanıyoruz
+        axios
+            .get(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(startCity)}.json?access_token=${mapboxgl.accessToken}`)
+            .then(response1 => {
+                const startCoords = response1.data.features[0]?.geometry?.coordinates;
+
+                if (!startCoords) {
+                    throw new Error('Başlangıç şehri bulunamadı.');
+                }
+
+                return axios
+                    .get(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(endCity)}.json?access_token=${mapboxgl.accessToken}`)
+                    .then(response2 => {
+                        const endCoords = response2.data.features[0]?.geometry?.coordinates;
+
+                        if (!endCoords) {
+                            throw new Error('Varış şehri bulunamadı.');
+                        }
+
+                        return { startCoords, endCoords };
+                    });
+            })
+            .then(({ startCoords, endCoords }) => {
+                map.flyTo({ center: startCoords, zoom: 7 });
+
+                // Önceki rotaları temizle
+                if (map.getLayer('route')) {
+                    map.removeLayer('route');
+                    map.removeSource('route');
+                }
+
+                // Yeni rota ekle
+                map.addSource('route', {
+                    type: 'geojson',
+                    data: {
+                        type: 'Feature',
+                        geometry: {
+                            type: 'LineString',
+                            coordinates: [startCoords, endCoords]
+                        }
+                    }
+                });
+
+                map.addLayer({
+                    id: 'route',
+                    type: 'line',
+                    source: 'route',
+                    layout: {
+                        'line-join': 'round',
+                        'line-cap': 'round'
+                    },
+                    paint: {
+                        'line-color': '#ff5500',
+                        'line-width': 5
+                    }
+                });
+
+                // Başlangıç ve varış noktalarına işaretçi ekle
+                new mapboxgl.Marker().setLngLat(startCoords).addTo(map);
+                new mapboxgl.Marker({ color: 'red' }).setLngLat(endCoords).addTo(map);
+            })
+            .catch(error => {
+                console.error(error);
+                alert('Şehirler arası rota bulunamadı. Lütfen geçerli şehir isimleri girin.');
+            });
+    });
+</script>
+<link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet">
